@@ -28,17 +28,29 @@ addEventListener('blur', () => { keys.clear(); pressed.clear(); });
 canvas.addEventListener('pointerdown', () => canvas.focus());
 document.querySelectorAll('[data-virtual-key]').forEach(button => {
   const key = button.dataset.virtualKey;
-  const release = () => { keys.delete(key); button.classList.remove('is-held'); };
-  button.addEventListener('pointerdown', e => {
-    e.preventDefault();
+  let clickTimer;
+  const press = () => {
     if (!keys.has(key)) pressed.add(key);
     keys.add(key);
     button.classList.add('is-held');
+  };
+  const release = () => { keys.delete(key); button.classList.remove('is-held'); };
+  button.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    press();
     button.setPointerCapture?.(e.pointerId);
   });
   button.addEventListener('pointerup', release);
   button.addEventListener('pointercancel', release);
   button.addEventListener('pointerleave', e => { if (e.buttons === 0) release(); });
+  // A normal click can be too brief to move a character or reach the next frame.
+  // Keep the virtual input active briefly so mouse-only play is reliable.
+  button.addEventListener('click', e => {
+    e.preventDefault();
+    clearTimeout(clickTimer);
+    press();
+    clickTimer = setTimeout(release, ['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(key) ? 240 : 100);
+  });
 });
 
 const assets = {
