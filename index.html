@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>共鸣者：夜航试炼</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">RESONATOR // PROTOTYPE 01</p>
+        <h1>共鸣者：夜航试炼</h1>
+      </div>
+      <div class="status"><span class="status-dot"></span><span id="loadStatus">正在载入素材…</span></div>
+    </header>
+
+    <section class="game-wrap">
+      <canvas id="game" width="1280" height="720" tabindex="0" aria-label="横版动作游戏画布"></canvas>
+      <div id="virtualControls" class="virtual-controls hidden" aria-label="点击操作按键">
+        <div class="virtual-player virtual-player-one">
+          <span class="virtual-label">菲比</span>
+          <div class="virtual-row">
+            <button type="button" data-virtual-key="a" aria-label="菲比向左">A</button>
+            <button type="button" data-virtual-key="d" aria-label="菲比向右">D</button>
+            <button type="button" data-virtual-key="w" aria-label="菲比跳跃">跳</button>
+          </div>
+          <div class="virtual-row">
+            <button type="button" data-virtual-key="j" aria-label="菲比普攻">普</button>
+            <button type="button" data-virtual-key="k" aria-label="菲比技能一">技一</button>
+            <button type="button" data-virtual-key="l" aria-label="菲比技能二">技二</button>
+            <button type="button" data-virtual-key="i" aria-label="菲比大招">大</button>
+          </div>
+        </div>
+        <div class="virtual-player virtual-player-two">
+          <span class="virtual-label">弗洛洛</span>
+          <div class="virtual-row">
+            <button type="button" data-virtual-key="ArrowLeft" aria-label="弗洛洛向左">←</button>
+            <button type="button" data-virtual-key="ArrowRight" aria-label="弗洛洛向右">→</button>
+            <button type="button" data-virtual-key="ArrowUp" aria-label="弗洛洛跳跃">跳</button>
+          </div>
+          <div class="virtual-row">
+            <button type="button" data-virtual-key="1" aria-label="弗洛洛普攻">普</button>
+            <button type="button" data-virtual-key="2" aria-label="弗洛洛技能一">技一</button>
+            <button type="button" data-virtual-key="3" aria-label="弗洛洛技能二">技二</button>
+            <button type="button" data-virtual-key="4" aria-label="弗洛洛大招">大</button>
+          </div>
+        </div>
+      </div>
+      <div id="menu" class="menu glass">
+        <p class="eyebrow">SIDE-SCROLLING CO-OP DEMO</p>
+        <h2>夜航试炼</h2>
+        <p class="menu-copy">菲比与弗洛洛穿过失真的城市，击退地面与浮游残响。先选模式，再用键盘开始战斗。</p>
+        <div class="mode-row">
+          <button class="primary" data-mode="solo">单人开始</button>
+          <button data-mode="coop">双人合作</button>
+        </div>
+        <div class="controls-preview">
+          <div><b>菲比</b><span>A / D 移动　W 跳跃　J 普攻　K / L 技能　I 大招</span></div>
+          <div><b>弗洛洛</b><span>← / → 移动　↑ 跳跃　1 普攻　2 / 3 技能　4 大招</span></div>
+        </div>
+      </div>
+      <div id="result" class="menu glass hidden">
+        <p class="eyebrow">TRIAL COMPLETE</p>
+        <h2 id="resultTitle">试炼完成</h2>
+        <p id="resultCopy">城市暂时恢复了安静。</p>
+        <button id="restart" class="primary">再来一次</button>
+      </div>
+    </section>
+
+    <footer class="hint">目标：击败 20 个残响后迎战潮核。普攻只能命中地面怪，技能和大招可以攻击飞行怪。</footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
