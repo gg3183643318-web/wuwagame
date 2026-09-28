@@ -35,21 +35,24 @@ document.querySelectorAll('[data-virtual-key]').forEach(button => {
     button.classList.add('is-held');
   };
   const release = () => { keys.delete(key); button.classList.remove('is-held'); };
+  const tapDuration = ['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(key) ? 240 : 100;
+  const holdBriefly = () => {
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(release, tapDuration);
+  };
   button.addEventListener('pointerdown', e => {
     e.preventDefault();
     press();
+    holdBriefly();
     button.setPointerCapture?.(e.pointerId);
   });
-  button.addEventListener('pointerup', release);
   button.addEventListener('pointercancel', release);
-  button.addEventListener('pointerleave', e => { if (e.buttons === 0) release(); });
   // A normal click can be too brief to move a character or reach the next frame.
   // Keep the virtual input active briefly so mouse-only play is reliable.
   button.addEventListener('click', e => {
     e.preventDefault();
-    clearTimeout(clickTimer);
     press();
-    clickTimer = setTimeout(release, ['a', 'd', 'ArrowLeft', 'ArrowRight'].includes(key) ? 240 : 100);
+    holdBriefly();
   });
 });
 
@@ -157,7 +160,7 @@ function update(dt){
   state.enemies.forEach(e=>{if(!e.dead&&e.hp<=0){e.dead=true;state.kills++;state.score+=e.boss?1000:100;burst(e.x,e.y-45,e.boss?'#fff0a4':(e.flyer?'#87e7ff':'#a996ff'),e.boss?35:14);if(e.boss)state.bossDefeated=true;}});
   state.enemies=state.enemies.filter(e=>!e.dead && e.x>-130); state.projectiles=state.projectiles.filter(p=>p.life>0&&p.x>-100&&p.x<W+160&&p.y>-80&&p.y<H+80); state.effects=state.effects.filter(a=>a.life>0);
   state.particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=260*dt;p.life-=dt;}); state.particles=state.particles.filter(p=>p.life>0);
-  const down=state.players.filter(p=>p.dead).length; if(state.bossDefeated) finish(true); else if(down===state.players.length) finish(false);
+  const down=state.players.filter(p=>p.dead).length; if(state.bossDefeated) finish(true); else if(state.players.length && down===state.players.length) finish(false);
   // Revive a fallen partner by standing nearby and pressing jump/action.
   state.players.forEach(p=>{if(!p.dead)return;const ally=state.players.find(a=>a!==p&&!a.dead&&Math.abs(a.x-p.x)<90);if(ally&&(keys.has(ally.controls.jump)||keys.has(ally.controls.basic))){p.dead=false;p.hp=45;p.invuln=1.5;burst(p.x,p.y-50,'#fff0b0',18);}});
 }
@@ -185,8 +188,9 @@ async function start(mode){
   if (starting) return;
   starting = true;
   document.querySelectorAll('[data-mode]').forEach(b => { b.disabled = true; b.textContent = '载入中…'; });
-  state.mode=mode; state.running=true; state.players=[];state.enemies=[];state.projectiles=[];state.effects=[];state.particles=[];state.score=0;state.kills=0;state.spawn=.7;state.elapsed=0;state.bossSpawned=false;state.bossDefeated=false;
+  state.mode=mode; state.running=false; state.players=[];state.enemies=[];state.projectiles=[];state.effects=[];state.particles=[];state.score=0;state.kills=0;state.spawn=.7;state.elapsed=0;state.bossSpawned=false;state.bossDefeated=false;
   const fibi=await prepareSprite(assets.fibi), floro=await prepareSprite(assets.floro); state.players.push(new Player('fibi',mode==='coop'?360:560,{left:'a',right:'d',jump:'w',basic:'j',s1:'k',s2:'l',ult:'i'},fibi)); if(mode==='coop')state.players.push(new Player('floro',700,{left:'ArrowLeft',right:'ArrowRight',jump:'ArrowUp',basic:'1',s1:'2',s2:'3',ult:'4'},floro));
+  state.running=true;
   menu.classList.add('hidden'); result.classList.add('hidden'); virtualControls.classList.remove('hidden'); loadStatus.textContent='素材已就绪 · 战斗中'; starting = false;
   canvas.focus();
 }
