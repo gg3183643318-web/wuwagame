@@ -18,8 +18,9 @@
 
     <section class="game-wrap">
       <canvas id="game" width="1280" height="720" tabindex="0" aria-label="横版动作游戏画布"></canvas>
+      <button id="pauseButton" class="pause-button hidden" type="button" aria-label="暂停战斗">暂停</button>
       <div id="virtualControls" class="virtual-controls hidden" aria-label="点击操作按键">
-        <div class="virtual-player virtual-player-one">
+        <div class="virtual-player virtual-player-one" data-kind="fibi">
           <span class="virtual-label">菲比</span>
           <div class="virtual-row">
             <button type="button" data-virtual-key="a" aria-label="菲比向左">A</button>
@@ -33,7 +34,7 @@
             <button type="button" data-virtual-key="i" aria-label="菲比大招">大</button>
           </div>
         </div>
-        <div class="virtual-player virtual-player-two">
+        <div class="virtual-player virtual-player-two" data-kind="floro">
           <span class="virtual-label">弗洛洛</span>
           <div class="virtual-row">
             <button type="button" data-virtual-key="ArrowLeft" aria-label="弗洛洛向左">←</button>
@@ -49,6 +50,11 @@
         </div>
       </div>
       <div id="menu" class="menu glass">
+        <div class="menu-figures" aria-hidden="true">
+          <img class="menu-figure menu-figure-fibi" src="参考素材/wiki官方/菲比/立绘.png" alt="" />
+          <img class="menu-figure menu-figure-floro" src="参考素材/wiki官方/弗洛洛/立绘.png" alt="" />
+        </div>
+        <div class="menu-content">
         <p class="eyebrow">SIDE-SCROLLING CO-OP DEMO</p>
         <h2>夜航试炼</h2>
         <p class="menu-copy">菲比与弗洛洛穿过失真的城市，击退地面与浮游残响。先选模式，再用键盘开始战斗。</p>
@@ -60,6 +66,37 @@
           <div><b>菲比</b><span>A / D 移动　W 跳跃　J 普攻　K / L 技能　I 大招</span></div>
           <div><b>弗洛洛</b><span>← / → 移动　↑ 跳跃　1 普攻　2 / 3 技能　4 大招</span></div>
         </div>
+        </div>
+      </div>
+      <div id="characterSelect" class="menu glass character-select hidden" aria-hidden="true">
+        <p class="eyebrow">SOLO LOADOUT</p>
+        <h2>选择角色</h2>
+        <p class="menu-copy">选择一名共鸣者进入夜航试炼。每名角色拥有独立的移动与技能按键。</p>
+        <div class="character-grid" role="group" aria-label="单人角色选择">
+          <button class="character-card is-selected" type="button" data-character="fibi" aria-pressed="true" aria-label="选择菲比">
+            <img src="参考素材/wiki官方/菲比/编队立绘.png" alt="菲比" />
+            <span class="character-name">菲比</span>
+            <span class="character-meta">灵能远射 · A/D/W · J/K/L/I</span>
+          </button>
+          <button class="character-card" type="button" data-character="floro" aria-pressed="false" aria-label="选择弗洛洛">
+            <img src="参考素材/wiki官方/弗洛洛/编队立绘.png" alt="弗洛洛" />
+            <span class="character-name">弗洛洛</span>
+            <span class="character-meta">近身突进 · 方向键 · 1/2/3/4</span>
+          </button>
+        </div>
+        <div class="character-actions">
+          <button id="characterBack" type="button">返回模式选择</button>
+          <button id="characterConfirm" type="button" class="primary">使用菲比开始</button>
+        </div>
+      </div>
+      <div id="pauseOverlay" class="menu glass hidden" aria-hidden="true">
+        <p class="eyebrow">TRIAL PAUSED</p>
+        <h2>已暂停</h2>
+        <p class="menu-copy">战斗已暂停，准备好后继续。</p>
+        <div class="character-actions">
+          <button id="resumeButton" type="button" class="primary">继续战斗</button>
+          <button id="exitButton" type="button">退出战斗</button>
+        </div>
       </div>
       <div id="result" class="menu glass hidden">
         <p class="eyebrow">TRIAL COMPLETE</p>
@@ -69,7 +106,7 @@
       </div>
     </section>
 
-    <footer class="hint">目标：击败 20 个残响后迎战潮核。普攻只能命中地面怪，技能和大招可以攻击飞行怪。</footer>
+    <footer class="hint">目标：击败 20 个残响后迎战潮核。普攻只能命中地面怪，技能和大招可以攻击飞行怪；绿色血包靠近后自动拾取。</footer>
   </main>
   <script src="game.js"></script>
 </body>
